@@ -2,8 +2,17 @@
 - name: Install Dependent Ubuntu Packages
   when: ansible_distribution in ['Ubuntu']
   ansible.builtin.apt:
-    name: policycoreutils  # Used by install script to restore SELinux context
+    pkg:
+    - nfs-common
+    - wireguard
+    - policycoreutils  # Used by install script to restore SELinux context
     update_cache: yes
+
+- name: Stop Swap
+  ansible.builtin.command: swapoff -a
+
+- name: Disable Swap
+  ansible.builtin.command: sed -i '/[[:space:]]swap[[:space:]]/ s/^\(.*\)$/#\1/g' /etc/fstab
 
 - name: Enable IPv4 forwarding
   ansible.posix.sysctl:

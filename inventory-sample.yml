@@ -3,23 +3,25 @@ k3s_cluster:
   children:
     server:
       hosts:
-        192.16.35.11:
+        192.168.56.100:
+        192.168.56.101:
+        192.168.56.102:
     agent:
       hosts:
-        192.16.35.12:
-        192.16.35.13:
+        192.168.56.103:
 
   # Required Vars
   vars:
-    ansible_port: 22
-    ansible_user: debian
-    k3s_version: v1.26.9+k3s1
-    token: "mytoken"  # Use ansible vault if you want to keep it secret
-    api_endpoint: "{{ hostvars[groups['server'][0]]['ansible_host'] | default(groups['server'][0]) }}"
-    extra_server_args: ""
-    extra_agent_args: ""
-
-  # Optional vars
+    k3s_version: "v1.28.3+k3s2"
+    # api_endpoint: "{{ hostvars[groups['server'][0]]['ansible_host'] | default(groups['server'][0]) }}"
+    api_endpoint: "192.168.56.100"
+    token: "myvagrant"
+    ansible_user: vagrant
+    # Required to use the private network configured above
+    extra_server_args: "--flannel-iface eth1 --write-kubeconfig-mode=644"
+    extra_agent_args: "--flannel-iface eth1"
+    extra_manifests: [ "traefik-config.yaml", "cert-manager.yaml" ]
+    # Optional vars
     # api_port: 6443
     # k3s_server_location: /var/lib/rancher/k3s
     # systemd_dir: /etc/systemd/system

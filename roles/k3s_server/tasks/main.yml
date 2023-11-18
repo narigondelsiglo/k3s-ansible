@@ -93,7 +93,7 @@
     - name: Copy kubectl config to local machine
       ansible.builtin.fetch:
         src: ~{{ ansible_user }}/.kube/config
-        dest: ~/.kube/config
+        dest: "{{ kube_config_path }}"
         flat: true
 
 - name: Start other server if any and verify status
