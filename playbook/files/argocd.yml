@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: argocd
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: argocd
+  namespace: kube-system
+spec:
+  repo: https://argoproj.github.io/argo-helm
+  chart: argo-cd
+  targetNamespace: argocd
+  valuesContent: |-
+    redis-ha:
+      enabled: true
+    controller:
+      replicas: 1
+    server:
+      autoscaling:
+        enabled: true
+        minReplicas: 2
+    repoServer:
+      autoscaling:
+        enabled: true
+        minReplicas: 2
+    applicationSet:
+      replicas: 2
